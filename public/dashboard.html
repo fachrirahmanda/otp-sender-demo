@@ -85,13 +85,13 @@
           <p class="privacy-note">Dashboard dilindungi kredensial admin. Kode OTP tidak ditampilkan di riwayat.</p>
         </section>
 
-        <footer class="auth-footer"><a href="/">Kembali ke demo OTP</a><span>Dashboard admin</span></footer>
+        <footer class="auth-footer"><a href="/">Kembali ke halaman utama</a><span>Dashboard admin</span></footer>
       </main>
     </div>
 
     <section id="dashboard" class="dashboard-layout" hidden>
       <aside class="dashboard-sidebar" aria-label="Navigasi dashboard">
-        <a class="dashboard-brand" href="/" aria-label="OTP Sender beranda">
+        <a class="dashboard-brand" href="#dashboard" aria-label="OTP Sender dashboard">
           <span class="brand-mark" aria-hidden="true">62</span>
           <span>OTP Sender</span>
         </a>
@@ -108,13 +108,13 @@
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg>
             <span>Ringkasan OTP</span>
           </a>
-          <a class="side-link" href="/">
+          <a class="side-link" href="#send-otp">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
             <span>Kirim OTP</span>
           </a>
         </nav>
 
-        <div class="sidebar-mode"><span class="status-dot"></span><span><strong>Mode demo</strong><small>SMS tidak dikirim</small></span></div>
+        <div class="sidebar-mode"><span class="status-dot"></span><span><strong id="sidebar-mode-title">Mode demo</strong><small id="sidebar-mode-copy">SMS tidak dikirim</small></span></div>
 
         <div class="dashboard-sidebar-foot">
           <div class="theme-switch" role="group" aria-label="Tema warna">
@@ -140,8 +140,8 @@
 
       <main class="dashboard-main">
         <header class="dashboard-topbar">
-          <div class="breadcrumbs"><a href="/">OTP Sender</a><span>/</span><strong>Ringkasan</strong></div>
-          <span class="topbar-status"><i></i> Demo aktif</span>
+          <div class="breadcrumbs"><a href="#dashboard">OTP Sender</a><span>/</span><strong>Ringkasan</strong></div>
+          <span class="topbar-status"><i></i> <span id="topbar-status-text">Demo aktif</span></span>
         </header>
 
         <div class="dashboard-content">
@@ -151,10 +151,82 @@
               <h1>Aktivitas OTP</h1>
               <p class="dashboard-subtitle">Pantau permintaan verifikasi terbaru.</p>
             </div>
-            <a class="btn btn-ghost btn-sm send-link" href="/">Kirim OTP</a>
+            <a class="btn btn-ghost btn-sm send-link" href="#send-otp">Kirim OTP</a>
           </header>
 
           <div id="dashboard-notice" class="alert notice" role="status" aria-live="polite" hidden></div>
+          <section id="send-otp" class="card otp-compose" aria-labelledby="send-otp-title">
+            <div class="otp-compose-header">
+              <div>
+                <h2 id="send-otp-title">Kirim kode verifikasi</h2>
+                <p>Pengiriman OTP hanya dapat dilakukan dari dashboard admin.</p>
+              </div>
+            </div>
+
+            <div id="mode-banner" class="alert mode-banner" hidden>
+              <span id="mode-badge" class="badge badge-info"></span>
+              <span id="mode-message"></span>
+            </div>
+            <div id="otp-notice" class="alert notice" role="status" aria-live="polite" hidden></div>
+
+            <ol class="verification-steps" aria-label="Langkah verifikasi">
+              <li id="send-step" class="is-current" aria-current="step">
+                <span class="step-index">01</span>
+                <span>Nomor</span>
+              </li>
+              <li id="verify-step">
+                <span class="step-index">02</span>
+                <span>Kode OTP</span>
+              </li>
+            </ol>
+
+            <form id="send-form" class="otp-form">
+              <label class="field-label" for="phone-number">Nomor telepon</label>
+              <div class="phone-field">
+                <span class="country-code" aria-hidden="true">ID <span>+62</span></span>
+                <input
+                  id="phone-number"
+                  class="input"
+                  name="phoneNumber"
+                  type="tel"
+                  autocomplete="tel"
+                  placeholder="81234567890"
+                  inputmode="tel"
+                  pattern="(\+?62)?[1-9][0-9]{7,11}|0[1-9][0-9]{7,11}"
+                  maxlength="16"
+                  required
+                >
+              </div>
+              <small class="hint">Tanpa kode negara, misalnya 81234567890.</small>
+              <div id="turnstile-widget" class="turnstile"></div>
+              <button id="send-button" class="btn btn-primary" type="submit" disabled>Kirim kode OTP</button>
+            </form>
+
+            <section id="demo-code-panel" class="card card-flat demo-code-panel" aria-live="polite" hidden>
+              <span>Kode demo</span>
+              <strong id="demo-code"></strong>
+              <p>SMS tidak dikirim. Masukkan kode ini untuk melanjutkan.</p>
+            </section>
+
+            <form id="verify-form" class="otp-form" hidden>
+              <label class="field-label" for="otp-code">Kode enam digit</label>
+              <input
+                id="otp-code"
+                class="input verification-code"
+                name="code"
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                placeholder="000000"
+                required
+              >
+              <small class="hint">Kode berlaku selama lima menit.</small>
+              <button id="verify-button" type="submit" class="btn btn-primary">Verifikasi nomor</button>
+            </form>
+          </section>
+
           <div class="stats">
             <article class="card stat-card">
               <span class="stat-label"><span class="stat-icon total-icon" aria-hidden="true">#</span>Total riwayat</span>

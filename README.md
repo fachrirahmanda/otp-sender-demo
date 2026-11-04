@@ -8,7 +8,7 @@ Halaman OTP dan dashboard memuat stylesheet serta theme helper Basis langsung da
 
 ## Status demo
 
-Konfigurasi `wrangler.jsonc` saat ini mengaktifkan `DEMO_MODE`. Aplikasi tidak mengirim SMS; kode uji ditampilkan di halaman dan respons API. Jangan gunakan nomor atau informasi sensitif. Sebelum mengaktifkan pengiriman SMS sungguhan, nonaktifkan mode demo dan siapkan semua Worker secrets serta Turnstile seperti dijelaskan di bawah.
+Konfigurasi `wrangler.jsonc` saat ini mengaktifkan `DEMO_MODE`. Aplikasi tidak mengirim SMS; kode uji ditampilkan di dashboard setelah admin masuk. Pengiriman dan verifikasi OTP memerlukan kredensial dashboard yang benar, termasuk saat mengakses API secara langsung. Jangan gunakan nomor atau informasi sensitif. Sebelum mengaktifkan pengiriman SMS sungguhan, nonaktifkan mode demo dan siapkan semua Worker secrets serta Turnstile seperti dijelaskan di bawah.
 
 ## Fitur
 
@@ -56,17 +56,21 @@ DASHBOARD_PASSWORD=ganti-dengan-password-lokal-yang-kuat
 
 ## Halaman demo tanpa mengirim SMS
 
-Jalankan `npm run demo`, lalu buka URL lokal Wrangler untuk memakai halaman demo. Masukkan nomor Indonesia, tekan **Kirim OTP**, lalu kode demo akan muncul di halaman untuk dimasukkan ke langkah verifikasi. Tidak diperlukan akun Twilio, Turnstile, atau biaya SMS.
+Jalankan `npm run demo`, buka `/dashboard`, lalu masuk menggunakan kredensial lokal dari `.dev.vars`. Masukkan nomor Indonesia pada bagian **Kirim kode verifikasi** di dashboard; kode demo akan tampil setelah login untuk dimasukkan ke langkah verifikasi. Tidak diperlukan akun Twilio, Turnstile, atau biaya SMS.
 
 Mode demo menonaktifkan pemeriksaan Turnstile dan menampilkan OTP di respons API/halaman. Gunakan hanya untuk demo lokal; jangan aktifkan `DEMO_MODE` pada deployment publik atau produksi. Deployment normal menggunakan Twilio dan memerlukan secrets di atas. Untuk mengaktifkan halaman pada mode normal, isi `TURNSTILE_SITE_KEY` di `wrangler.jsonc` dengan site key widget Turnstile.
 
 ## Dashboard admin
 
-Dashboard di `/dashboard` meminta kredensial yang disimpan sebagai secrets Worker. Endpoint riwayat menolak akses tanpa kredensial yang benar. Dashboard hanya menampilkan nomor yang disamarkan, waktu, dan status: `Diterima provider` berarti Twilio menerima permintaan, bukan konfirmasi pengantaran SMS. Riwayat tidak menyimpan kode OTP dan hanya menyimpan hingga 500 entri terbaru. Jangan mengaktifkan mode demo pada deployment publik karena mode tersebut mengembalikan kode OTP pada API.
+Dashboard di `/dashboard` meminta kredensial yang disimpan sebagai secrets Worker. Pengiriman serta verifikasi OTP dan endpoint riwayat menolak akses tanpa kredensial yang benar. Halaman utama mengarahkan pengguna ke login dashboard; tidak ada formulir kirim OTP publik. Dashboard hanya menampilkan nomor yang disamarkan, waktu, dan status: `Diterima provider` berarti Twilio menerima permintaan, bukan konfirmasi pengantaran SMS. Riwayat tidak menyimpan kode OTP dan hanya menyimpan hingga 500 entri terbaru. Jangan mengaktifkan mode demo pada deployment publik karena mode tersebut mengembalikan kode OTP kepada admin yang sudah login.
+
+Saat login, dashboard menyimpan kredensial hanya di memori halaman untuk mengirim header `Authorization` ke API. Login berakhir ketika halaman dimuat ulang atau admin keluar.
 
 ## API
 
 ### `POST /api/otp/send`
+
+Wajib menyertakan `Authorization: Basic <base64(username:password)>` dengan kredensial dashboard admin.
 
 ```json
 {
@@ -84,6 +88,8 @@ Balasan sukses `202`:
 ```
 
 ### `POST /api/otp/verify`
+
+Wajib menyertakan header autentikasi dashboard yang sama.
 
 ```json
 {

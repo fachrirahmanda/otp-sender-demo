@@ -189,6 +189,13 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
   if (path !== "/api/otp/send" && path !== "/api/otp/verify") {
     return jsonResponse({ error: "Not found" }, 404, headers);
   }
+  if (!env.DASHBOARD_USERNAME || !env.DASHBOARD_PASSWORD) {
+    console.error("Dashboard credentials are not configured");
+    return jsonResponse({ error: "Dashboard is not configured" }, 503, headers);
+  }
+  if (!isDashboardAuthorized(request, env)) {
+    return jsonResponse({ error: "Login tidak valid" }, 401, headers);
+  }
 
   let body: Record<string, unknown>;
   try {
@@ -260,6 +267,9 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     try {
       const url = new URL(request.url);
+      if (url.pathname === "/" && request.method === "GET") {
+        return Response.redirect(new URL("/dashboard", url), 302);
+      }
       if (url.pathname === "/dashboard" && request.method === "GET") {
         return Response.redirect(new URL("/dashboard.html", url), 302);
       }

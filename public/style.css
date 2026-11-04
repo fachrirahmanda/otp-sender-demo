@@ -825,6 +825,69 @@ footer a {
   text-decoration: none;
 }
 
+.otp-compose {
+  margin-bottom: var(--space-5);
+  padding: clamp(16px, 3vw, 24px);
+}
+
+.otp-compose-header {
+  margin-bottom: var(--space-4);
+}
+
+.otp-compose-header h2 {
+  margin: 0 0 5px;
+  font-size: var(--text-lg);
+}
+
+.otp-compose-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.otp-compose .verification-steps {
+  max-width: 420px;
+  margin-bottom: var(--space-4);
+}
+
+.otp-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.otp-form .field-label {
+  margin: 0;
+}
+
+.otp-form .phone-field,
+.otp-form .verification-code {
+  width: min(100%, 420px);
+}
+
+.otp-form .hint {
+  margin-top: 0;
+}
+
+.otp-form > .btn {
+  min-width: 180px;
+  margin-top: var(--space-2);
+}
+
+.otp-form[hidden],
+#verify-form[hidden],
+#demo-code-panel[hidden],
+#mode-banner[hidden],
+#otp-notice[hidden] {
+  display: none;
+}
+
+.otp-compose .demo-code-panel {
+  width: min(100%, 420px);
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1121,6 +1184,10 @@ footer a {
 
   .dashboard-heading h1 {
     font-size: 26px;
+  }
+
+  .otp-form > .btn {
+    width: 100%;
   }
 
   .send-link {
