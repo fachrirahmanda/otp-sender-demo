@@ -4,7 +4,7 @@ Backend API untuk mengirim dan memverifikasi OTP melalui Twilio SMS ke nomor Ind
 
 ## Shared design system
 
-Halaman OTP dan dashboard memuat stylesheet serta theme helper Basis langsung dari `https://design-system-bc6.pages.dev/v1/`. Gaya lokal di `public/style.css` hanya menangani layout khusus aplikasi; warna, tipografi, input verifikasi, tombol, tabel, badge, dan mode terang/gelap mengikuti design system bersama. Karena library `/v1/` memiliki cache singkat, pembaruan design system akan diterapkan tanpa menyalin CSS ke project ini.
+Halaman OTP dan dashboard memuat stylesheet serta theme helper Basis langsung dari `https://design-system-bc6.pages.dev/v1/`. Gaya lokal di `public/style.css` hanya menangani layout khusus aplikasi, termasuk login split-screen dan navigasi sidebar dashboard; warna, tipografi, input verifikasi, tombol, tabel, badge, dan mode terang/gelap mengikuti design system bersama. Karena library `/v1/` memiliki cache singkat, pembaruan design system akan diterapkan tanpa menyalin CSS ke project ini.
 
 ## Status demo
 

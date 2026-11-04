@@ -1,3 +1,4 @@
+const authLayout = document.querySelector("#auth-layout");
 const loginCard = document.querySelector("#login-card");
 const loginForm = document.querySelector("#login-form");
 const loginButton = document.querySelector("#login-button");
@@ -54,6 +55,7 @@ async function loadHistory() {
     if (response.status === 401) {
       authorization = "";
       dashboard.hidden = true;
+      authLayout.hidden = false;
       loginCard.hidden = false;
       showNotice(loginNotice, "Sesi berakhir atau kredensial tidak valid. Silakan masuk kembali.", "error");
       return;
@@ -114,6 +116,7 @@ loginForm.addEventListener("submit", async (event) => {
       throw new Error(result.error || "Login gagal.");
     }
     loginForm.reset();
+    authLayout.hidden = true;
     loginCard.hidden = true;
     dashboard.hidden = false;
     await loadHistory();
@@ -130,6 +133,7 @@ logoutButton.addEventListener("click", () => {
   authorization = "";
   historyRows.replaceChildren();
   dashboard.hidden = true;
+  authLayout.hidden = false;
   loginCard.hidden = false;
   loginForm.reset();
   loginNotice.hidden = true;
