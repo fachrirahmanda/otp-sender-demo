@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "otp-sender",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "OTP_SERVICE",
+        "class_name": "OtpService"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["OtpService"]
+    }
+  ],
+  "vars": {
+    "OTP_TTL_SECONDS": "300",
+    "OTP_COOLDOWN_SECONDS": "60",
+    "OTP_MAX_ATTEMPTS": "5",
+    "OTP_MAX_SENDS_PER_HOUR": "5",
+    "OTP_MAX_SENDS_PER_MONTH": "100",
+    "DEMO_MODE": "true",
+    "TURNSTILE_SITE_KEY": "",
+    "ALLOWED_ORIGIN": ""
+  }
+}
