@@ -74,6 +74,7 @@ function normalizePhoneNumber(value) {
 
 function handleUnauthorized() {
   authorization = "";
+  history.replaceState(null, "", "/login");
   dashboard.hidden = true;
   authLayout.hidden = false;
   loginCard.hidden = false;
@@ -248,6 +249,7 @@ loginForm.addEventListener("submit", async (event) => {
       throw new Error(result.error || "Login gagal.");
     }
     loginForm.reset();
+    history.replaceState(null, "", "/dashboard");
     authLayout.hidden = true;
     loginCard.hidden = true;
     dashboard.hidden = false;
@@ -334,6 +336,7 @@ refreshButton.addEventListener("click", loadHistory);
 
 logoutButton.addEventListener("click", () => {
   authorization = "";
+  history.replaceState(null, "", "/login");
   historyRows.replaceChildren();
   dashboard.hidden = true;
   authLayout.hidden = false;

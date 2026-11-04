@@ -45,7 +45,7 @@ Batas bulanan menghitung setiap permintaan yang sudah dicoba ke Twilio, termasuk
    `OTP_HMAC_SECRET` dan `DASHBOARD_PASSWORD` harus berupa nilai acak yang kuat; gunakan password dashboard minimal 32 karakter.
 5. Untuk frontend di origin berbeda, isi `ALLOWED_ORIGIN` pada `wrangler.jsonc` dengan satu origin persis, misalnya `https://app.example.com`. Biarkan kosong jika frontend memakai origin yang sama.
 6. Jalankan `npm run dev` untuk lokal dan `npm run deploy` untuk deploy. Wrangler akan membuat Durable Object sesuai migrasi di konfigurasi.
-7. Buka `/dashboard` pada domain Worker dan masuk dengan username/password dashboard. Gunakan HTTPS dan batasi akses dashboard lebih lanjut dengan Cloudflare Access bila tersedia.
+7. Buka `/login` pada domain Worker dan masuk dengan username/password dashboard. Setelah login, panel OTP tersedia di `/dashboard`. Gunakan HTTPS dan batasi akses dashboard lebih lanjut dengan Cloudflare Access bila tersedia.
 
 Untuk login dashboard saat pengembangan lokal, buat file `.dev.vars` (file ini diabaikan Git) dengan isi:
 
@@ -56,13 +56,13 @@ DASHBOARD_PASSWORD=ganti-dengan-password-lokal-yang-kuat
 
 ## Halaman demo tanpa mengirim SMS
 
-Jalankan `npm run demo`, buka `/dashboard`, lalu masuk menggunakan kredensial lokal dari `.dev.vars`. Masukkan nomor Indonesia pada bagian **Kirim kode verifikasi** di dashboard; kode demo akan tampil setelah login untuk dimasukkan ke langkah verifikasi. Tidak diperlukan akun Twilio, Turnstile, atau biaya SMS.
+Jalankan `npm run demo`, buka `/login`, lalu masuk menggunakan kredensial lokal dari `.dev.vars`. Masukkan nomor Indonesia pada bagian **Kirim kode verifikasi** di dashboard; kode demo akan tampil setelah login untuk dimasukkan ke langkah verifikasi. Tidak diperlukan akun Twilio, Turnstile, atau biaya SMS.
 
 Mode demo menonaktifkan pemeriksaan Turnstile dan menampilkan OTP di respons API/halaman. Gunakan hanya untuk demo lokal; jangan aktifkan `DEMO_MODE` pada deployment publik atau produksi. Deployment normal menggunakan Twilio dan memerlukan secrets di atas. Untuk mengaktifkan halaman pada mode normal, isi `TURNSTILE_SITE_KEY` di `wrangler.jsonc` dengan site key widget Turnstile.
 
 ## Dashboard admin
 
-Dashboard di `/dashboard` meminta kredensial yang disimpan sebagai secrets Worker. Pengiriman serta verifikasi OTP dan endpoint riwayat menolak akses tanpa kredensial yang benar. Halaman utama mengarahkan pengguna ke login dashboard; tidak ada formulir kirim OTP publik. Dashboard hanya menampilkan nomor yang disamarkan, waktu, dan status: `Diterima provider` berarti Twilio menerima permintaan, bukan konfirmasi pengantaran SMS. Riwayat tidak menyimpan kode OTP dan hanya menyimpan hingga 500 entri terbaru. Jangan mengaktifkan mode demo pada deployment publik karena mode tersebut mengembalikan kode OTP kepada admin yang sudah login.
+Halaman login tersedia di `/login`; setelah login, dashboard tampil di `/dashboard`. Akses langsung atau pemuatan ulang `/dashboard` mengarahkan kembali ke `/login`, karena autentikasi hanya disimpan di memori halaman. Pengiriman serta verifikasi OTP dan endpoint riwayat menolak akses tanpa kredensial yang benar. Halaman utama mengarahkan pengguna ke login dashboard; tidak ada formulir kirim OTP publik. Dashboard hanya menampilkan nomor yang disamarkan, waktu, dan status: `Diterima provider` berarti Twilio menerima permintaan, bukan konfirmasi pengantaran SMS. Riwayat tidak menyimpan kode OTP dan hanya menyimpan hingga 500 entri terbaru. Jangan mengaktifkan mode demo pada deployment publik karena mode tersebut mengembalikan kode OTP kepada admin yang sudah login.
 
 Saat login, dashboard menyimpan kredensial hanya di memori halaman untuk mengirim header `Authorization` ke API. Login berakhir ketika halaman dimuat ulang atau admin keluar.
 

@@ -268,10 +268,13 @@ export default {
     try {
       const url = new URL(request.url);
       if (url.pathname === "/" && request.method === "GET") {
-        return Response.redirect(new URL("/dashboard", url), 302);
+        return Response.redirect(new URL("/login", url), 302);
       }
       if (url.pathname === "/dashboard" && request.method === "GET") {
-        return Response.redirect(new URL("/dashboard.html", url), 302);
+        return Response.redirect(new URL("/login", url), 302);
+      }
+      if (url.pathname === "/login" && request.method === "GET") {
+        return await env.ASSETS.fetch(request);
       }
       if (!url.pathname.startsWith("/api/")) {
         return await env.ASSETS.fetch(request);
